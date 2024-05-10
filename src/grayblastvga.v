@@ -47,7 +47,7 @@ module tt_um_gfg_development_grayblastvga (
         .clk(clk),
         .rst_n(reset_n),
 
-        .pixel_div(uio_in[3:0]),
+        .pixel_div(pixel_div),
 
         .v_sync_out(uo_out[0]),
         .h_sync_out(uo_out[1]),
@@ -57,6 +57,14 @@ module tt_um_gfg_development_grayblastvga (
         .frame_reset_out(uo_out[7]),
         .frame_pixel_in(ui_in[7:4])
     );
+
+    // register to select pixel divider
+    reg [3:0] pixel_div;
+    always @(posedge clk) begin
+        if (ui_in[7] == 1) begin
+            pixel_div   <= ui_in[3:0];
+        end
+    end
 
     // test register to extrapolate needed size for register
     reg [135:0] registers;
