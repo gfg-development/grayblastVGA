@@ -93,7 +93,6 @@ module vga #(
         end
     end
 
-
     // counter and state machine for lines in a frame
     reg  [WIDTH_LINE_CTR - 1 : 0]   line_ctr;
     reg                             v_sync;
