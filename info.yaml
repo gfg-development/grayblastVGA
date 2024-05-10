@@ -21,24 +21,24 @@ project:
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 pinout:
   # Inputs
-  ui[0]: ""
-  ui[1]: ""
-  ui[2]: ""
-  ui[3]: ""
-  ui[4]: ""
-  ui[5]: ""
-  ui[6]: ""
-  ui[7]: ""
+  ui[0]: "Pixel divider[0]"
+  ui[1]: "Pixel divider[1]"
+  ui[2]: "Pixel divider[2]"
+  ui[3]: "Pixel divider[3]"
+  ui[4]: "Frame - pixel[0]"
+  ui[5]: "Frame - pixel[1]"
+  ui[6]: "Frame - pixel[2]"
+  ui[7]: "Frame - pixel[3]"
 
   # Outputs
-  uo[0]: ""
-  uo[1]: ""
-  uo[2]: ""
-  uo[3]: ""
-  uo[4]: ""
-  uo[5]: ""
-  uo[6]: ""
-  uo[7]: ""
+  uo[0]: "VSync"
+  uo[1]: "HSync"
+  uo[2]: "Gray[0]"
+  uo[3]: "Gray[1]"
+  uo[4]: "Gray[2]"
+  uo[5]: "Gray[3]"
+  uo[6]: "Frame - next pixel"
+  uo[7]: "Frame - reset"
 
   # Bidirectional pins
   uio[0]: ""

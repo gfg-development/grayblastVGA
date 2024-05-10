@@ -55,7 +55,7 @@ module tt_um_gfg_development_grayblastvga (
 
         .frame_next_pixel_out(uo_out[6]),
         .frame_reset_out(uo_out[7]),
-        .frame_pixel_in(ui_in[3:0])
+        .frame_pixel_in(ui_in[7:4])
     );
   
 endmodule
