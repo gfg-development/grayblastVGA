@@ -34,7 +34,7 @@ module tt_um_gfg_development_grayblastvga (
     assign uio_oe  = 8'b00000000;
 
     // synchronize the reset
-    reg latch_reset_n[2:0];
+    reg [2:0] latch_reset_n;
     always @(posedge clk) begin
         latch_reset_n   <= {latch_reset_n[1:0], rst_n};  
     end
