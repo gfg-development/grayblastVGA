@@ -57,5 +57,11 @@ module tt_um_gfg_development_grayblastvga (
         .frame_reset_out(uo_out[7]),
         .frame_pixel_in(ui_in[7:4])
     );
-  
+
+    // test register to extrapolate needed size for register
+    reg [135:0] registers;
+    always @(posedge clk) begin
+        registers <= {registers[134:0], uio_in[0]};
+    end
+
 endmodule
