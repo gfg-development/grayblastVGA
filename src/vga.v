@@ -31,14 +31,14 @@ module vga #(
     parameter ROW_SYNC_PULSE    = 4,
     parameter ROW_BACK_PORCH    = 23,
 
-    parameter WIDTH_PIXEL_CTR   = 4
+    parameter WIDTH_PIXEL_DIV   = 4
 ) (
     /* General signals */
     input  wire                             clk,                    // clock
     input  wire                             rst_n,                  // low active reset, already synchronized to the clock
 
     /* configuration signals */
-    input  wire [WIDTH_LINE_CTR - 1 : 0]    pixel_div,              // divider minus 1 for the pixel shifting
+    input  wire [WIDTH_PIXEL_DIV - 1 : 0]   pixel_div,              // divider minus 1 for the pixel shifting
 
     /* VGA signals */
     output wire                             v_sync_out,             // vertical sync pulse
@@ -66,7 +66,7 @@ module vga #(
     reg                             new_line;
     reg                             row_reset;
     always @(posedge clk) begin
-        if reset_n = 0 begin
+        if (rst_n == 0) begin
             pixel_ctr                       <= 0;
             row_reset                       <= 1;
         end else begin
@@ -100,7 +100,7 @@ module vga #(
     reg                             new_frame;
     reg                             line_reset;
     always @(posedge new_line) begin
-        if reset_n = 0 begin
+        if (rst_n == 0) begin
             line_ctr                        <= 0;
             line_reset                      <= 1;
         end else begin
@@ -128,17 +128,16 @@ module vga #(
     end
 
     // black out the pixels while not in the visible area
-    assign  gray_out = (row_reset == 1 or line_reset == 1) ? 0 : pixel_buffer;
+    assign  gray_out = (row_reset == 1 || line_reset == 1) ? 0 : pixel_buffer;
 
     // handle the buffering and reading of pixels from the frame buffer
     reg  [WIDTH_PIXEL_DIV - 1 : 0]  clk_ctr;
     reg                             shift_pixel_out;
     reg  [3 : 0]                    pixel_buffer;
     always @(posedge clk) begin
-        if (row_reset == 1 or line_reset == 1) begin
+        if (row_reset == 1 || line_reset == 1) begin
             clk_ctr                         <= 0;
             shift_pixel_out                 <= 0;
-            gray_out                        <= 0;
             pixel_buffer                    <= frame_pixel_in;
         end else begin
             if (clk_ctr == pixel_div) begin
