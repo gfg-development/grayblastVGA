@@ -61,7 +61,7 @@ module tt_um_gfg_development_grayblastvga (
     // register to select pixel divider
     reg [3:0] pixel_div;
     always @(posedge clk) begin
-        if (ui_in[7] == 1) begin
+        if (uio_in[7] == 1) begin
             pixel_div   <= ui_in[3:0];
         end
     end
