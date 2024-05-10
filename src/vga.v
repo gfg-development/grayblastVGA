@@ -97,32 +97,31 @@ module vga #(
     // counter and state machine for lines in a frame
     reg  [WIDTH_LINE_CTR - 1 : 0]   line_ctr;
     reg                             v_sync;
-    reg                             new_frame;
     reg                             line_reset;
-    always @(posedge new_line) begin
+    always @(posedge clk) begin
         if (rst_n == 0) begin
             line_ctr                        <= 0;
             line_reset                      <= 1;
         end else begin
-            new_frame                       <= 0;
-            line_ctr                        <= line_ctr + 1;
+            if (new_line == 1) begin
+                line_ctr                        <= line_ctr + 1;
 
-            if (line_ctr == ROW_VISIBLE - 1) begin
-                line_reset                  <= 1;
-            end
+                if (line_ctr == ROW_VISIBLE - 1) begin
+                    line_reset                  <= 1;
+                end
 
-            if (line_ctr == ROW_VISIBLE + ROW_FRONT_PORCH - 1) begin
-                v_sync                      <= 1;
-            end
+                if (line_ctr == ROW_VISIBLE + ROW_FRONT_PORCH - 1) begin
+                    v_sync                      <= 1;
+                end
 
-            if (line_ctr == ROW_VISIBLE + ROW_FRONT_PORCH + ROW_SYNC_PULSE - 1) begin
-                v_sync                      <= 0;
-            end
+                if (line_ctr == ROW_VISIBLE + ROW_FRONT_PORCH + ROW_SYNC_PULSE - 1) begin
+                    v_sync                      <= 0;
+                end
 
-            if (line_ctr == ROW_VISIBLE + ROW_FRONT_PORCH + ROW_SYNC_PULSE + ROW_BACK_PORCH - 1) begin
-                new_frame                   <= 1;
-                line_reset                  <= 0;
-                line_ctr                    <= 0;
+                if (line_ctr == ROW_VISIBLE + ROW_FRONT_PORCH + ROW_SYNC_PULSE + ROW_BACK_PORCH - 1) begin
+                    line_reset                  <= 0;
+                    line_ctr                    <= 0;
+                end
             end
         end
     end
