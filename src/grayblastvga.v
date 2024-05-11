@@ -30,8 +30,8 @@ module tt_um_gfg_development_grayblastvga (
     input  wire       rst_n     // Reset_n - low to reset
 );
     // all output pins must be assigned. If not used, assign to 0.
-    // assign uio_out = 8'b00000000;
-    assign uio_oe  = 8'b00000000;
+    assign uio_out[5:0] = 6'b000000;
+    assign uio_oe       = 8'b11000000;
 
     /* Synchronize the reset */
     reg [2:0] latch_reset_n;
