@@ -50,7 +50,7 @@ module vga #(
     output wire                             frame_reset_out,        // request a reset of the frame buffer pointer
     input  wire [3:0]                       frame_pixel_in          // the pixel data from the frame buffer
 );
-    // calculate some helpfull constants
+    /* Calculate some helpfull constants */
     parameter WIDTH_PIXEL_CTR   = $clog2(LINE_VISIBLE + LINE_FRONT_PORCH + LINE_SYNC_PULSE + LINE_BACK_PORCH);
     parameter WIDTH_LINE_CTR    = $clog2(ROW_VISIBLE + ROW_FRONT_PORCH + ROW_SYNC_PULSE + ROW_BACK_PORCH);
 
@@ -60,7 +60,7 @@ module vga #(
     assign frame_reset_out      = v_sync;
     assign frame_next_pixel_out = shift_pixel_out;
 
-    // counter and state machine for pixels in a line
+    /* Counter and state machine for pixels in a line */
     reg  [WIDTH_PIXEL_CTR - 1 : 0]  pixel_ctr;
     reg                             h_sync;
     reg                             new_line;
@@ -93,7 +93,7 @@ module vga #(
         end
     end
 
-    // counter and state machine for lines in a frame
+    /* Counter and state machine for lines in a frame */
     reg  [WIDTH_LINE_CTR - 1 : 0]   line_ctr;
     reg                             v_sync;
     reg                             line_reset;
@@ -125,10 +125,10 @@ module vga #(
         end
     end
 
-    // black out the pixels while not in the visible area
+    /* Black out the pixels while not in the visible area */
     assign  gray_out = (row_reset == 1 || line_reset == 1) ? 0 : pixel_buffer;
 
-    // handle the buffering and reading of pixels from the frame buffer
+    /* Handle the buffering and reading of pixels from the frame buffer */
     reg  [WIDTH_PIXEL_DIV - 1 : 0]  clk_ctr;
     reg                             shift_pixel_out;
     reg  [3 : 0]                    pixel_buffer;
