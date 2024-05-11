@@ -56,12 +56,8 @@ module core #(
 
     generate
         genvar y;
-        for (y = 0; y < 9; y++) begin
+        for (y = 0; y < 16; y++) begin
             assign registers[y + 16]        = global_registers_in[BIT_WIDTH * (y + 1) - 1 : BIT_WIDTH * y];
-        end
-
-        for (y = 9; y < 16; y++) begin
-            assign registers[y + 16]        = 0;
         end
     endgenerate
 
@@ -80,14 +76,12 @@ module core #(
     wire [2 * BIT_WIDTH - 1 : 0] adder_inputs [1 : 0];
     wire [2 * BIT_WIDTH - 1 : 0] adder_result;
 
-
     generate
         genvar n;
         for (n = 0; n < 2; n++) begin
             assign adder_inputs[n] = (opcode[2 + n] == 0) ? 
                 {{BIT_WIDTH{registers[select_regs[n]][BIT_WIDTH - 1]}}, registers[select_regs[n]]} : 
                 accumulator;
-            
         end
     endgenerate
     assign adder_result     = (opcode[0] == 0) ? (adder_inputs[0] + adder_inputs[1]) : (adder_inputs[0] - adder_inputs[1]);
@@ -113,7 +107,6 @@ module core #(
                     begin
                     end
 
-
                 2'b11:      // Misc
                     begin
                         /* Local store command */
@@ -121,12 +114,9 @@ module core #(
                             local_registers[destination_reg]    <= accumulator[7:0];
                         end
                     end
-
-
             endcase
         end
     end
 
     assign accu         = accumulator;
-
 endmodule
