@@ -63,7 +63,7 @@ module core #(
 
     wire [4:0] select_regs [0:1];
     assign select_regs[0]   = opcode[13:9];
-    assign select_regs[1]   = {1'b0, opcode[8:5]};
+    assign select_regs[1]   = opcode[8:4];
 
     wire [LOCAL_REG_ADDR_WIDTH - 1 : 0] destination_reg;
     assign destination_reg  = opcode[LOCAL_REG_ADDR_WIDTH + 8 : 9];
@@ -103,8 +103,17 @@ module core #(
                         end
                     end
 
-                2'b10:      // ALU operation with 0 or 1 operands
+                2'b10:      // ALU operation without operands (just operating on accu)
                     begin
+                        casez (opcode[13:12])
+                            2'b00:
+                                accumulator                         <= accumulator << 1; 
+                            
+                            2'b01:
+                                accumulator                         <= accumulator >> 1;
+
+                            default: begin end
+                        endcase
                     end
 
                 2'b11:      // Misc
