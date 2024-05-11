@@ -25,24 +25,24 @@ module tt_um_gfg_development_grayblastvga (
     input  wire [7:0] uio_in,   // IOs: Input path
     output wire [7:0] uio_out,  // IOs: Output path
     output wire [7:0] uio_oe,   // IOs: Enable path (active high: 0=input, 1=output)
-    input  wire       ena,      // always 1 when the design is powered, so you can ignore it
-    input  wire       clk,      // clock
-    input  wire       rst_n     // reset_n - low to reset
+    input  wire       ena,      // Always 1 when the design is powered, so you can ignore it
+    input  wire       clk,      // Clock
+    input  wire       rst_n     // Reset_n - low to reset
 );
     // all output pins must be assigned. If not used, assign to 0.
     // assign uio_out = 8'b00000000;
     assign uio_oe  = 8'b00000000;
 
-    // synchronize the reset
+    /* Synchronize the reset */
     reg [2:0] latch_reset_n;
     always @(posedge clk) begin
-        latch_reset_n   <= {latch_reset_n[1:0], rst_n};  
+        latch_reset_n       <= {latch_reset_n[1:0], rst_n};  
     end
 
     wire reset_n;
     assign reset_n = latch_reset_n[2];
 
-    // the component to generate the VGA signals and read from the framebuffer
+    /* The component to generate the VGA signals and read from the framebuffer */
     vga vga(
         .clk(clk),
         .rst_n(reset_n),
@@ -58,19 +58,51 @@ module tt_um_gfg_development_grayblastvga (
         .frame_pixel_in(ui_in[7:4])
     );
 
-    // register to select pixel divider
+    /* Register to select pixel divider */
     reg [3:0] pixel_div;
     always @(posedge clk) begin
         if (uio_in[7] == 1) begin
-            pixel_div   <= ui_in[3:0];
+            pixel_div       <= ui_in[3:0];
         end
     end
 
-    // test register to extrapolate needed size for register
+    /* Synchronize the reset */
+    reg [2:0] latch_reset_gpu_n;
+    wire gpu_clk;
+    always @(posedge gpu_clk) begin
+        latch_reset_gpu_n   <= {latch_reset_gpu_n[1:0], rst_n};  
+    end
+
+    assign gpu_clk  = uio_in[6];
+
+    wire gpu_reset_n;
+    assign gpu_reset_n = latch_reset_gpu_n[2];
+
+    /* Collecting the opcodes */
+    reg [13:0] opcode;
+    reg execute;
+    always @(posedge clk) begin
+        if (gpu_reset_n == 0) begin
+            execute         <= 0;
+        end else begin
+            opcode          <= {opcode[6:0], uio_in[6:0]};
+        end
+    end
+
+    /* The core array */
+    core_array core_array (
+        .clk(gpu_clk),
+        .opcode(opcode),
+        .execute(execute),
+        .valid_bit(uio_out[7]),
+        .output_bit(uio_out[6])
+    );
+
+    /* Test register to extrapolate needed size for register */
     reg [135:0] registers;
     always @(posedge clk) begin
-        registers <= {registers[134:0], uio_in[0]};
+        registers           <= {registers[134:0], uio_in[0]};
     end
-    assign uio_out = registers[134:127];
+    assign uio_out[5:0] = registers[134:129];
 
 endmodule
