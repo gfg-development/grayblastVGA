@@ -61,7 +61,7 @@ module tt_um_gfg_development_grayblastvga (
     /* Register to select pixel divider */
     reg [3:0] pixel_div;
     always @(posedge clk) begin
-        if (uio_in[7] == 1) begin
+        if (uio_in[4] == 0) begin
             pixel_div       <= ui_in[3:0];
         end
     end
@@ -70,39 +70,34 @@ module tt_um_gfg_development_grayblastvga (
     reg [2:0] latch_reset_gpu_n;
     wire gpu_clk;
     always @(posedge gpu_clk) begin
-        latch_reset_gpu_n   <= {latch_reset_gpu_n[1:0], rst_n};  
+        latch_reset_gpu_n   <= {latch_reset_gpu_n[1:0], uio_in[4]};  
     end
 
-    assign gpu_clk  = uio_in[6];
+    assign gpu_clk  = uio_in[5];
 
     wire gpu_reset_n;
     assign gpu_reset_n = latch_reset_gpu_n[2];
 
     /* Collecting the opcodes */
-    reg [13:0] opcode;
+    reg [15:0] opcode;
     reg execute;
     always @(posedge clk) begin
         if (gpu_reset_n == 0) begin
             execute         <= 0;
         end else begin
-            opcode          <= {opcode[6:0], uio_in[6:0]};
+            opcode          <= {opcode[7:0], ui_in[3:0], uio_in[3:0]};
         end
     end
 
     /* The core array */
-    core_array core_array (
+    core_array #(
+        .BIT_WIDTH(8),
+        .NR_CORES(1)
+    ) core_array (
         .clk(gpu_clk),
         .opcode(opcode),
         .execute(execute),
         .valid_bit(uio_out[7]),
         .output_bit(uio_out[6])
     );
-
-    /* Test register to extrapolate needed size for register */
-    reg [135:0] registers;
-    always @(posedge clk) begin
-        registers           <= {registers[134:0], uio_in[0]};
-    end
-    assign uio_out[5:0] = registers[134:129];
-
 endmodule
