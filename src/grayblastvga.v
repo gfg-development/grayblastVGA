@@ -80,7 +80,7 @@ module tt_um_gfg_development_grayblastvga (
 
     /* Collecting the opcodes */
     reg [15:0] opcode;
-    wire execute;
+    reg execute;
     reg first_half;
     always @(posedge gpu_clk) begin
         if (gpu_reset_n == 0) begin
@@ -96,7 +96,7 @@ module tt_um_gfg_development_grayblastvga (
     /* The core array */
     core_array #(
         .BIT_WIDTH(8),
-        .NR_CORES(1)
+        .NR_CORES(2)
     ) core_array (
         .clk(gpu_clk),
         .opcode(opcode),
