@@ -21,10 +21,10 @@ project:
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 pinout:
   # Inputs
-  ui[0]: "Pixel divider[0]"
-  ui[1]: "Pixel divider[1]"
-  ui[2]: "Pixel divider[2]"
-  ui[3]: "Pixel divider[3]"
+  ui[0]: "Pixel divider[0] / GPU OP-Code[4]"
+  ui[1]: "Pixel divider[1] / GPU OP-Code[5]"
+  ui[2]: "Pixel divider[2] / GPU OP-Code[6]"
+  ui[3]: "Pixel divider[3] / GPU OP-Code[7]"
   ui[4]: "Frame - pixel[0]"
   ui[5]: "Frame - pixel[1]"
   ui[6]: "Frame - pixel[2]"
@@ -41,14 +41,14 @@ pinout:
   uo[7]: "Frame - reset"
 
   # Bidirectional pins
-  uio[0]: ""
-  uio[1]: ""
-  uio[2]: ""
-  uio[3]: ""
-  uio[4]: ""
-  uio[5]: ""
-  uio[6]: ""
-  uio[7]: ""
+  uio[0]: "GPU OP-Code[0]"
+  uio[1]: "GPU OP-Code[1]"
+  uio[2]: "GPU OP-Code[2]"
+  uio[3]: "GPU OP-Code[3]"
+  uio[4]: "Latch divider/GPU core reset (low active)"
+  uio[5]: "GPU core clock"
+  uio[6]: "GPU cores output bit"
+  uio[7]: "GPU cores valid bit"
 
 # Do not change!
 yaml_version: 6

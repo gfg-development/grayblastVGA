@@ -19,11 +19,12 @@
 `default_nettype none
 
 module core_array #(
-    parameter NR_CORES      = 4
+    parameter NR_CORES      = 4,
+    parameter BIT_WIDTH     = 8
 ) (
     /* Control signals */
     input  wire                             clk,                    // clock
-    input  wire [13:0]                      opcode,                 // OP code to execute
+    input  wire [15:0]                      opcode,                 // OP code to execute
     input  wire                             execute,
 
     /* Output signals */
@@ -31,46 +32,57 @@ module core_array #(
     output reg                              output_bit
 );
 
+/* Global registers */
+reg [BIT_WIDTH - 1 : 0] global_registers [0 : 8];
+
 /* Handling the core specific commands */
 reg [NR_CORES - 1 : 0] execute_core;
 integer i;
 always @(posedge clk) begin
     valid_bit                       <= 0;
     if (execute == 1) begin
-        if ((opcode[13] == 0) && (opcode[7:0] == 8'b10111111)) begin
-            execute_core            <= 0;
-            for (i = 0; i < NR_CORES; i++) begin
-                if (i[4:0] == opcode[12:8]) begin
-                    execute_core[i] <= 1;
+
+        // Misc commands
+        if (opcode[15:14] == 2'b11) begin
+            /* Glboal store command */
+            if (opcode[7] == 1) begin
+                for (i = 0; i < NR_CORES; i++) begin
+                    if (execute_core[i] == 1) begin
+                        global_registers[opcode[13:9]]  <= accu_core[i][7 : 0]; 
+                    end
                 end
             end
-        end
 
-        if ((opcode[13] == 0) && (opcode[7:0] == 8'b11111111)) begin
-            execute_core            <= {NR_CORES{1'b1}};
-        end
-
-        if ((opcode[13] == 0) && (opcode[7:0] == 8'b01111111)) begin
-            valid_bit               <= 1;
-            for (i = 0; i < NR_CORES; i++) begin
-                if (i[4:0] == opcode[12:8]) begin
-                    output_bit      <= accu_lsb_core[i];
-                end
-            end
+            /* Core enable and disable */
+            case (opcode[6:5])
+                2'b01:
+                    for (i = 0; i < NR_CORES; i++) begin
+                        if (i[4:0] == opcode[13:9]) begin
+                            execute_core[i] <= 1;
+                        end
+                    end
+                2'b10:
+                    execute_core                        <= {NR_CORES{1'b1}};
+                default: begin end 
+            endcase
         end
     end
 end
 
 /* Instanciate the cores */
-wire [NR_CORES - 1 : 0] accu_lsb_core;
+wire [2 * BIT_WIDTH - 1 : 0] accu_core [0 : NR_CORES - 1];
 generate
     genvar y;
     for (y = 0; y < NR_CORES; y++) begin
-        core core(
+        core #(
+            .CORE_ID(y),
+            .BIT_WIDTH(BIT_WIDTH)
+        ) core (
             .clk(clk),
             .opcode(opcode),
             .execute(execute_core[y] & execute),
-            .accu_lsb(accu_lsb_core[y])
+            .accu(accu_core[y]),
+            .global_registers_in(global_registers)
         );
     end
 endgenerate
