@@ -17,6 +17,8 @@ project:
   source_files:        
     - "grayblastvga.v"
     - "vga.v"
+    - "core_array.v"
+    - "core.v"
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 pinout:
