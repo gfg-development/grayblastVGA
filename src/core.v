@@ -29,7 +29,7 @@ module core #(
     input  wire                         execute,
 
     /* Global registers */
-    input  wire [BIT_WIDTH - 1 : 0]     global_registers_in [0 : 8],
+    input  wire [9 * BIT_WIDTH - 1 : 0] global_registers_in,
 
     /* Output signals */
     output wire [2 * BIT_WIDTH - 1 : 0] accu
@@ -51,7 +51,7 @@ endgenerate
 generate
     genvar y;
     for (y = 0; y < 9; y++) begin
-        assign registers[y + 16]        = global_registers_in[y];
+        assign registers[y + 16]        = global_registers_in[BIT_WIDTH * (y + 1) - 1 : BIT_WIDTH * y];
     end
 endgenerate
 
