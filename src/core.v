@@ -46,12 +46,20 @@ generate
     for (i = 0; i < NR_LOCAL_REGS; i++) begin
         assign registers[i]             = local_registers[i];
     end
+
+    for (i = NR_LOCAL_REGS; i < 14; i++) begin
+        assign registers[i]             = 0;
+    end
 endgenerate
 
 generate
     genvar y;
     for (y = 0; y < 9; y++) begin
         assign registers[y + 16]        = global_registers_in[BIT_WIDTH * (y + 1) - 1 : BIT_WIDTH * y];
+    end
+
+    for (y = 9; y < 16; y++) begin
+        assign registers[y + 16]        = 0;
     end
 endgenerate
 
