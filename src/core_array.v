@@ -78,6 +78,15 @@ end
 
 /* Instanciate the cores */
 wire [2 * BIT_WIDTH - 1 : 0] accu_core [0 : NR_CORES - 1];
+wire [9 * BIT_WIDTH - 1 : 0] flatten_global_reg;
+
+generate
+    genvar z;
+    for (z = 0; z < 9; z++) begin
+        assign flatten_global_reg[BIT_WIDTH * (z + 1) - 1 : BIT_WIDTH * z] = global_registers[z];
+    end
+endgenerate
+
 generate
     genvar y;
     for (y = 0; y < NR_CORES; y++) begin
@@ -89,7 +98,7 @@ generate
             .opcode(opcode),
             .execute(execute_core[y] & execute),
             .accu(accu_core[y]),
-            .global_registers_in(global_registers)
+            .global_registers_in(flatten_global_reg)
         );
     end
 endgenerate
