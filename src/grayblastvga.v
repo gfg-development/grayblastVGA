@@ -81,11 +81,12 @@ module tt_um_gfg_development_grayblastvga (
     /* Collecting the opcodes */
     reg [15:0] opcode;
     reg execute;
-    always @(posedge clk) begin
+    always @(posedge gpu_clk) begin
         if (gpu_reset_n == 0) begin
             execute         <= 0;
         end else begin
             opcode          <= {opcode[7:0], ui_in[3:0], uio_in[3:0]};
+            execute         <= ~execute;
         end
     end
 
