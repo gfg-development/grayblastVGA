@@ -56,15 +56,22 @@ always @(posedge clk) begin
             /* Core enable and disable */
             case (opcode[6:5])
                 2'b01:
-                    for (i = 0; i < NR_CORES; i++) begin
-                        if (i[4:0] == opcode[13:9]) begin
-                            execute_core[i] <= 1;
+                    begin
+                        execute_core                    <= 0;
+                        for (i = 0; i < NR_CORES; i++) begin
+                            execute_core[opcode[13:9]]  <= 1;
                         end
                     end
+                    
                 2'b10:
                     execute_core                        <= {NR_CORES{1'b1}};
                 default: begin end 
             endcase
+
+            /* Output the LSB of the accumulator from the selected core */
+            if (opcode[4] == 1) begin
+               output_bit                               <= accu_core[opcode[13:9]][0]; 
+            end
         end
     end
 end
