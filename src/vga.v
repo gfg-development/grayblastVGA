@@ -69,6 +69,7 @@ module vga #(
         if (rst_n == 0) begin
             pixel_ctr                       <= 0;
             row_reset                       <= 1;
+            h_sync                          <= 0;
         end else begin
             new_line                        <= 0;
             pixel_ctr                       <= pixel_ctr + 1;
@@ -101,6 +102,7 @@ module vga #(
         if (rst_n == 0) begin
             line_ctr                        <= 0;
             line_reset                      <= 1;
+            v_sync                          <= 0;
         end else begin
             if (new_line == 1) begin
                 line_ctr                        <= line_ctr + 1;
