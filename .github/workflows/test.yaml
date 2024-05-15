@@ -29,13 +29,12 @@ jobs:
           make clean
           make
           # make will return success even if the test fails, so check for failure in the results.xml
-          ! grep failure toplevel/results.xml
-          ! grep failure vga/results.xml
+          ! find . -type f -name '*/results.xml' | xargs grep "failure"
 
       - name: Test Summary
         uses: test-summary/action@v2.3
         with:
-          paths: "test/results.xml"
+          paths: "test/*/results.xml"
         if: always()
 
       - name: upload vcd
