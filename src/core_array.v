@@ -86,14 +86,14 @@ module core_array #(
 
     generate
         genvar z;
-        for (z = 0; z < 16; z++) begin
+        for (z = 0; z < 16; z = z + 1) begin
             assign flatten_global_reg[BIT_WIDTH * (z + 1) - 1 : BIT_WIDTH * z] = global_registers[z];
         end
     endgenerate
 
     generate
         genvar y;
-        for (y = 0; y < NR_CORES; y++) begin
+        for (y = 0; y < NR_CORES; y = y + 1) begin
             core #(
                 .CORE_ID(y),
                 .BIT_WIDTH(BIT_WIDTH)
