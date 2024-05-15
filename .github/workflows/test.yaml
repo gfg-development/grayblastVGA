@@ -29,7 +29,8 @@ jobs:
           make clean
           make
           # make will return success even if the test fails, so check for failure in the results.xml
-          ! grep failure results.xml
+          ! grep failure toplevel/results.xml
+          ! grep failure vga/results.xml
 
       - name: Test Summary
         uses: test-summary/action@v2.3
@@ -43,5 +44,5 @@ jobs:
         with:
           name: test-vcd
           path: |
-            test/tb.vcd
-            test/result.xml
+            test/toplevel/tb.vcd
+            test/*/result.xml
