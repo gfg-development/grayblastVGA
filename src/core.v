@@ -45,18 +45,18 @@ module core #(
     assign registers[15]                    = CORE_ID[BIT_WIDTH - 1 : 0];
     generate
         genvar i;
-        for (i = 0; i < NR_LOCAL_REGS; i++) begin
+        for (i = 0; i < NR_LOCAL_REGS; i = i + 1) begin
             assign registers[i]             = local_registers[i];
         end
 
-        for (i = NR_LOCAL_REGS; i < 14; i++) begin
+        for (i = NR_LOCAL_REGS; i < 14; i = i + 1) begin
             assign registers[i]             = 0;
         end
     endgenerate
 
     generate
         genvar y;
-        for (y = 0; y < 16; y++) begin
+        for (y = 0; y < 16; y = y + 1) begin
             assign registers[y + 16]        = global_registers_in[BIT_WIDTH * (y + 1) - 1 : BIT_WIDTH * y];
         end
     endgenerate
@@ -78,7 +78,7 @@ module core #(
 
     generate
         genvar n;
-        for (n = 0; n < 2; n++) begin
+        for (n = 0; n < 2; n = n + 1) begin
             assign adder_inputs[n] = (opcode[2 + n] == 0) ? 
                 {{BIT_WIDTH{registers[select_regs[n]][BIT_WIDTH - 1]}}, registers[select_regs[n]]} : 
                 accumulator;
