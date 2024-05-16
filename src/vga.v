@@ -38,7 +38,7 @@ module vga #(
     input  wire                             rst_n,                  // low active reset, already synchronized to the clock
 
     /* configuration signals */
-    input  wire [WIDTH_PIXEL_DIV - 1 : 0]   pixel_div,              // divider minus 1 for the pixel shifting
+    input  wire [WIDTH_PIXEL_DIV - 1 : 0]   pixel_div,              // divider minus 1 for the pixel shifting, minimal value for it is 3
 
     /* VGA signals */
     output wire                             v_sync_out,             // vertical sync pulse
@@ -145,6 +145,7 @@ module vga #(
         end else begin
             if (clk_ctr == pixel_div) begin
                 clk_ctr                     <= 0;
+                pixel_buffer                <= frame_pixel_in;
             end else begin
                 clk_ctr                     <= clk_ctr + 1;
             end
@@ -155,10 +156,6 @@ module vga #(
 
             if (clk_ctr == (pixel_div >> 1)) begin
                 shift_pixel_out             <= 0;
-            end
-
-            if (clk_ctr == pixel_div - 1) begin
-                pixel_buffer                <= frame_pixel_in;
             end
         end
     end
