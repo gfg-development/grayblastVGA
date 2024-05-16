@@ -25,31 +25,16 @@ async def test_durations(dut):
     # Measure v_sync length
     await RisingEdge(dut.v_sync)
     start_v_sync = get_sim_time("ns")
-    await FallingEdge(dut.v_sync)
-    
-    assert get_sim_time("ns") - start_v_sync == 105600
 
-    for _ in range(600):
-        # Measure h_sync length
-        await RisingEdge(dut.h_sync)
-        start_h_sync = get_sim_time("ns")
-        await FallingEdge(dut.h_sync)
-        assert get_sim_time("ns") - start_h_sync == 3200
-
-        await ClockCycles(dut.clk, 87)
-        assert dut.gray.value == 0
-
-        for _ in range(800):
+    for _ in range(2):
+        for clock_counter in range(628 * 1056):
             await ClockCycles(dut.clk, 1)
-            assert dut.gray.value == 1
 
-        await ClockCycles(dut.clk, 0)
-        assert dut.gray.value == 0
+            # Check v_sync
+            assert dut.v_sync.value == (1 if clock_counter < 4 * 1056 else 0), "VSync: {} at {}".format(dut.v_sync.value, clock_counter)
 
-        # Measure length of line
-        await RisingEdge(dut.h_sync)   
-        assert get_sim_time("ns") - start_h_sync == 26400
-    
-    # Measure frame length
-    await RisingEdge(dut.v_sync)    
-    assert get_sim_time("ns") - start_v_sync == 16579200
+            # Check h_sync
+            assert dut.h_sync.value == (1 if clock_counter % 1056 < 128 else 0), "HSync: {} at {}".format(dut.h_sync.value, clock_counter)
+
+            # Check gray value
+            assert dut.gray.value == (1 if (clock_counter / 1056 >= 27 and clock_counter / 1056 < 627) and (clock_counter % 1056 >= 216 and clock_counter % 1056 < 1016) else 0), "Gray: {} at {}".format(dut.gray.value, clock_counter)
