@@ -78,6 +78,10 @@ module vga #(
                 row_reset                   <= 1;
             end
 
+            if (pixel_ctr == LINE_VISIBLE + LINE_FRONT_PORCH - 2) begin
+                new_line                    <= 1;
+            end
+
             if (pixel_ctr == LINE_VISIBLE + LINE_FRONT_PORCH - 1) begin
                 h_sync                      <= 1;
             end
@@ -87,7 +91,6 @@ module vga #(
             end
 
             if (pixel_ctr == LINE_VISIBLE + LINE_FRONT_PORCH + LINE_SYNC_PULSE + LINE_BACK_PORCH - 1) begin
-                new_line                    <= 1;
                 row_reset                   <= 0;
                 pixel_ctr                   <= 0;
             end
