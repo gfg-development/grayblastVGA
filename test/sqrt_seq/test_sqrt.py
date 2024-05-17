@@ -12,6 +12,10 @@ async def test_sqrt(dut):
     clock = Clock(dut.clk, 25, units="ns")
     cocotb.start_soon(clock.start())
 
+    dut.reset.value = 1
+    await RisingEdge(dut.clk)
+    dut.reset.value = 0
+
     await RisingEdge(dut.clk)
 
     for i in range(2**16):
