@@ -5,7 +5,7 @@
 SIM ?= icarus
 TOPLEVEL_LANG ?= verilog
 SRC_DIR = $(PWD)/../../src
-PROJECT_SOURCES = grayblastvga.v vga.v core_array.v core.v
+PROJECT_SOURCES = grayblastvga.v vga.v core_array.v core.v sqrt.v
 
 ifneq ($(GATES),yes)
 
