@@ -97,7 +97,7 @@ module core #(
             casez (opcode[15:14])
                 2'b00:     // Load register
                     begin
-                        local_registers[destination_reg]            <= opcode[7:0];
+                        local_registers[destination_reg]            <= {{BIT_WIDTH - 8{1'b0}}, opcode[7:0]};
                     end
 
                 2'b01:      // ALU operation with 2 operands
@@ -129,7 +129,7 @@ module core #(
                     begin
                         /* Local store command */
                         if (opcode[8] == 1) begin
-                            local_registers[destination_reg]    <= accumulator[7:0];
+                            local_registers[destination_reg]        <= accumulator[BIT_WIDTH - 1 : 0];
                         end
                     end
             endcase

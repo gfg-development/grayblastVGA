@@ -53,7 +53,7 @@ module core_array #(
                 if (opcode[7] == 1) begin
                     for (i = 0; i < NR_CORES; i++) begin
                         if (execute_core[i] == 1) begin
-                            global_registers[opcode[12:9]]  <= accu_core[i][7 : 0]; 
+                            global_registers[opcode[12:9]]  <= accu_core[i][BIT_WIDTH - 1 : 0]; 
                         end
                     end
                 end
