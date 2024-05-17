@@ -95,7 +95,7 @@ module tt_um_gfg_development_grayblastvga (
 
     /* The core array */
     core_array #(
-        .BIT_WIDTH(8),
+        .BIT_WIDTH(10),
         .NR_CORES(2)
     ) core_array (
         .clk(gpu_clk),

@@ -20,7 +20,8 @@
 
 module core_array #(
     parameter NR_CORES      = 4,
-    parameter BIT_WIDTH     = 8
+    parameter BIT_WIDTH     = 8,
+    parameter GLOBAL_REGS   = 12
 ) (
     /* Control signals */
     input  wire                             clk,                    // clock
@@ -86,7 +87,7 @@ module core_array #(
 
     generate
         genvar z;
-        for (z = 0; z < 16; z = z + 1) begin
+        for (z = 0; z < GLOBAL_REGS; z = z + 1) begin
             assign flatten_global_reg[BIT_WIDTH * (z + 1) - 1 : BIT_WIDTH * z] = global_registers[z];
         end
     endgenerate
