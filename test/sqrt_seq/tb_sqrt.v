@@ -18,6 +18,7 @@ module tb_sqrt ();
 
     // wire up the inputs and outputs
     reg             clk;
+    reg             reset;
 
     reg             start;
     reg [15 : 0]    x_in;
@@ -27,6 +28,7 @@ module tb_sqrt ();
 
     sqrt_pipe #(.BIT_WIDTH(16)) sqrt_pipe (
         .clk(clk),
+        .reset(reset),
 
         .x_in(x_in),
         .start(start),
