@@ -90,6 +90,8 @@ module core_array #(
         for (z = 0; z < GLOBAL_REGS; z = z + 1) begin
             assign flatten_global_reg[BIT_WIDTH * (z + 1) - 1 : BIT_WIDTH * z] = global_registers[z];
         end
+
+        assign flatten_global_reg[BIT_WIDTH * 16 - 1 : BIT_WIDTH * GLOBAL_REGS] = {(16 - GLOBAL_REGS) * BIT_WIDTH {1'b0}};
     endgenerate
 
     generate
