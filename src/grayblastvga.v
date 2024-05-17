@@ -34,13 +34,13 @@ module tt_um_gfg_development_grayblastvga (
     assign uio_oe       = 8'b11000000;
 
     /* Synchronize the reset */
-    reg [2:0] latch_reset_n;
+    reg [1:0] latch_reset_n;
     always @(posedge clk) begin
-        latch_reset_n       <= {latch_reset_n[1:0], rst_n};  
+        latch_reset_n       <= {latch_reset_n[0], rst_n};  
     end
 
     wire reset_n;
-    assign reset_n = latch_reset_n[2];
+    assign reset_n = latch_reset_n[1];
 
     /* The component to generate the VGA signals and read from the framebuffer */
     vga vga(
@@ -62,21 +62,21 @@ module tt_um_gfg_development_grayblastvga (
     reg [3:0] pixel_div;
     always @(posedge clk) begin
         if (uio_in[4] == 0) begin
-            pixel_div       <= ui_in[3:0];
+            pixel_div       <= {0, ui_in[2:0]};
         end
     end
 
     /* Synchronize the reset */
-    reg [2:0] latch_reset_gpu_n;
+    reg [1:0] latch_reset_gpu_n;
     wire gpu_clk;
     always @(posedge gpu_clk) begin
-        latch_reset_gpu_n   <= {latch_reset_gpu_n[1:0], uio_in[4]};  
+        latch_reset_gpu_n   <= {latch_reset_gpu_n[0], uio_in[4]};  
     end
 
     assign gpu_clk  = uio_in[5];
 
     wire gpu_reset_n;
-    assign gpu_reset_n = latch_reset_gpu_n[2];
+    assign gpu_reset_n = latch_reset_gpu_n[1];
 
     /* Collecting the opcodes */
     reg [15:0] opcode;
