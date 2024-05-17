@@ -43,7 +43,7 @@ module sqrt #(parameter BIT_WIDTH = 12) (
 
     genvar i;
     generate
-        for (i = 0; i < BIT_WIDTH / 2; i += 1) begin
+        for (i = 0; i < BIT_WIDTH / 2; i = i + 1) begin
             assign d[BIT_WIDTH * (i + 1) - 1 : BIT_WIDTH * i] = 1 << (BIT_WIDTH - 2*i - 2);
 
             // x_diff = x - (c + d)
