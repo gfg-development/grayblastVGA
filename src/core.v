@@ -25,6 +25,7 @@ module core #(
 ) (
     /* Control signals */
     input  wire                         clk,                    // clock
+    input  wire                         reset,
     input  wire [15:0]                  opcode,                 // OP code to execute
     input  wire                         execute,
 
@@ -86,13 +87,21 @@ module core #(
     endgenerate
     assign adder_result     = (opcode[0] == 0) ? (adder_inputs[0] + adder_inputs[1]) : (adder_inputs[0] - adder_inputs[1]);
 
+    reg                          sqrt_start;
     wire [2 * BIT_WIDTH - 1 : 0] sqrt_result;
-    sqrt #(.BIT_WIDTH(2 * BIT_WIDTH)) sqrt (
+    wire                         sqrt_finish;
+
+    sqrt_pipe #(.BIT_WIDTH(2 * BIT_WIDTH)) sqrt_pipe (
+        .clk(clk),
+        .reset(reset),
         .x_in(accumulator),
-        .x_out(sqrt_result)
+        .start(sqrt_start),
+        .x_out(sqrt_result),
+        .finish(sqrt_finish)
     );
 
     always @(posedge clk) begin
+        sqrt_start                                                  <= 0;
         if (execute == 1) begin
             casez (opcode[15:14])
                 2'b00:     // Load register
@@ -119,7 +128,11 @@ module core #(
                                 accumulator                         <= accumulator >> 1;
 
                             2'b11:
-                                accumulator                         <= sqrt_result;
+                                if (opcode[11] == 0) begin
+                                    sqrt_start                      <= 1;
+                                end else begin
+                                    accumulator                     <= sqrt_result;
+                                end
 
                             default: begin end
                         endcase
