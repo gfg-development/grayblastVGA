@@ -52,7 +52,7 @@ module sqrt_pipe #(parameter BIT_WIDTH = 12) (
 
     always @(posedge clk) begin
         if (reset == 1) begin
-            idle          <= 0;
+            idle          <= 1;
         end else begin
             if (idle == 1) begin
                 if (start == 1) begin

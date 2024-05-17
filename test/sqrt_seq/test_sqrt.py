@@ -13,7 +13,8 @@ async def test_sqrt(dut):
     cocotb.start_soon(clock.start())
 
     dut.reset.value = 1
-    await RisingEdge(dut.clk)
+    dut.start.value = 0
+    await ClockCycles(dut.clk, 5)
     dut.reset.value = 0
 
     await RisingEdge(dut.clk)
