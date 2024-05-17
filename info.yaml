@@ -19,6 +19,7 @@ project:
     - "vga.v"
     - "core_array.v"
     - "core.v"
+    - "sqrt.v"
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 pinout:

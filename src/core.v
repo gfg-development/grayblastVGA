@@ -86,6 +86,12 @@ module core #(
     endgenerate
     assign adder_result     = (opcode[0] == 0) ? (adder_inputs[0] + adder_inputs[1]) : (adder_inputs[0] - adder_inputs[1]);
 
+    wire [2 * BIT_WIDTH - 1 : 0] sqrt_result;
+    sqrt #(.BIT_WIDTH(2 * BIT_WIDTH)) sqrt (
+        .x_in(accumulator),
+        .x_out(sqrt_result)
+    );
+
     always @(posedge clk) begin
         if (execute == 1) begin
             casez (opcode[15:14])
@@ -111,6 +117,9 @@ module core #(
                             
                             2'b01:
                                 accumulator                         <= accumulator >> 1;
+
+                            2'b11:
+                                accumulator                         <= sqrt_result;
 
                             default: begin end
                         endcase
