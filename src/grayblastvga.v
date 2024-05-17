@@ -94,14 +94,11 @@ module tt_um_gfg_development_grayblastvga (
     end
 
     /* The core array */
-    wire reset;
-    assign reset = ~rst_n;
     core_array #(
         .BIT_WIDTH(10),
         .NR_CORES(2)
     ) core_array (
         .clk(gpu_clk),
-        .reset(reset),
         .opcode(opcode),
         .execute(execute),
         .valid_bit(uio_out[7]),

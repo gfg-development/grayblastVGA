@@ -25,7 +25,6 @@ module core_array #(
 ) (
     /* Control signals */
     input  wire                             clk,                    // clock
-    input  wire                             reset,
     input  wire [15:0]                      opcode,                 // OP code to execute
     input  wire                             execute,
 
@@ -103,7 +102,6 @@ module core_array #(
                 .BIT_WIDTH(BIT_WIDTH)
             ) core (
                 .clk(clk),
-                .reset(reset),
                 .opcode(opcode),
                 .execute(execute_core[y] & execute),
                 .accu(accu_core[y]),
