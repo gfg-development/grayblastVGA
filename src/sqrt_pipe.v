@@ -60,6 +60,7 @@ module sqrt_pipe #(parameter BIT_WIDTH = 12) (
                     x     <= x_in;
                     c     <= 0;
                     d     <= { 2'b01, {(BIT_WIDTH - 2){1'b0}}};
+                    idle  <= 0;
                 end
             end else begin
                 if ((d <= x) || (flag == 1)) begin
